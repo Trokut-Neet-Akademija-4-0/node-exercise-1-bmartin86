@@ -1,10 +1,10 @@
 class Singleton {
-   private static instance: Singleton
+  private static instance: Singleton
 
-   constructor() {}
+  constructor() {}
 
-   static getInstance(): Singleton {
-    if(!Singleton.instance) {
+  static getInstance(): Singleton {
+    if (!Singleton.instance) {
       Singleton.instance = new Singleton()
     }
     return Singleton.instance

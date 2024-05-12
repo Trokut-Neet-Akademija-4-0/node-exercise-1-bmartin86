@@ -1,7 +1,7 @@
 import Osoba from './zad1'
 
 class Student extends Osoba {
-  constructor (
+  constructor(
     ime: string,
     dob: number,
     private brojIndexa: number,

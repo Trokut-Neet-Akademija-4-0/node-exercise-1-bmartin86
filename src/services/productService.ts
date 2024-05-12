@@ -1,32 +1,134 @@
-import Product from '../models/interfaces/productInterface'
+import Product from '../entities/Product'
+import Image from '../entities/Image'
+import IProduct from '../models/interfaces/productInterface'
 import products from '../models/productsModel'
 import HttpError from '../utils/HttpError'
+import Gender from '../entities/Gender'
+import Category from '../entities/Category'
+import { IsNull } from 'typeorm'
 
 class ProductService {
-  private products: Product[] = products
+  private products: IProduct[] = products
 
-
-  getAllProducts(): Product[] {
-    return this.products
+  async getAllProducts(): Promise<Product[]> {
+    return Product.find({
+      relations: {
+        images: true,
+        gender: true,
+        category: true,
+      },
+      where: {
+        deletedAt: IsNull(),
+      },
+    })
   }
 
-  getProductById(id: number): Product {
-    const foundProduct = this.products.find((product) => product.id === id)
+  async getProductById(id: number): Promise<Product> {
+    const foundProduct = await Product.findOne({
+      relations: {
+        images: true,
+        gender: true,
+        category: true,
+      },
+      where: {
+        productId: id,
+      },
+    })
     if (!foundProduct)
       throw new HttpError(404, `Product with id ${id} not found`)
     return foundProduct
   }
 
-  deleteProductById(id: number): Product {
-    const indexToDelete = this.products.findIndex(
-      (product) => product.id === id,
-    )
+  async updateProduct(
+    productId: number,
+    existingProduct: Product,
+  ): Promise<Product> {
+    const product = await this.getProductById(productId)
+    product.updateExistingProduct(existingProduct)
+    return product.save()
+  }
 
-    if (indexToDelete < 0)
-      throw new HttpError(404, `Product with id ${id} not found`)
+  async deleteProductById(id: number): Promise<Product> {
+    const product = await this.getProductById(id)
+    product.deletedAt = new Date()
+    return product.save()
+  }
 
-    const deletedProduct = this.products.splice(indexToDelete, 1)
-    return deletedProduct[0]
+  async addNewProduct(prod: Product): Promise<Product> {
+    const product = Product.create(prod)
+    await product.save()
+    if (product.images && product.images.length > 0)
+      return this.addNewImagesToExsistingProduct(
+        product.productId,
+        product.images,
+      )
+    return product
+  }
+
+  //Product Images
+  async getProductImages(productId: number): Promise<Image[]> {
+    const product = await this.getProductById(productId)
+    return product.images
+  }
+
+  async addNewImagesToExsistingProduct(
+    productId: number,
+    newImages: Image[],
+  ): Promise<Product> {
+    const product = await this.getProductById(productId)
+    for await (const image of newImages) {
+      const newImageEntity = Image.create(image)
+      newImageEntity.product = product
+      await newImageEntity.save()
+    }
+    return this.getProductById(productId)
+  }
+
+  async updateExistingImagesInExistingProduct(
+    updateImages: Image[],
+  ): Promise<Image[]> {
+    const updatedImages = new Array<Image>()
+    for await (const image of updateImages) {
+      const existingImage = await Image.findOne({
+        where: {
+          imageId: image.imageId,
+        },
+      })
+      if (existingImage) {
+        existingImage.imageUrl = image.imageUrl
+        existingImage.imageName = image.imageName
+        existingImage.imageDescription = image.imageDescription
+        existingImage.isThumbnail = image.isThumbnail
+        existingImage.isCartImage = image.isCartImage
+        existingImage.productId = image.productId
+        updatedImages.push(await existingImage.save())
+      }
+    }
+    return updatedImages
+  }
+
+  async deleteImageById(id: number): Promise<Image | void> {
+    const existingImage = await Image.findOne({
+      where: {
+        imageId: id,
+      },
+    })
+    if (existingImage) {
+      return existingImage.remove()
+    }
+    return undefined
+  }
+
+  //Product Gender
+  async getProductGender(productId: number): Promise<Gender> {
+    const product = await this.getProductById(productId)
+    return product.gender
+  }
+
+  //Product Category
+  async getProductCategory(productId: number): Promise<Category> {
+    const product = await this.getProductById(productId)
+    return product.category
   }
 }
 

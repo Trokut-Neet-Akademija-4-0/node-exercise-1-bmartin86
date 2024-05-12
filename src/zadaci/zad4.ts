@@ -1,7 +1,7 @@
 abstract class KucniLjubimac {
   public ime: string | undefined
-  // public ime!: string 
-  abstract glasajSe(): string 
+  // public ime!: string
+  abstract glasajSe(): string
 }
 
 class Pas extends KucniLjubimac {

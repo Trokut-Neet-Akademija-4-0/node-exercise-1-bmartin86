@@ -1,26 +1,24 @@
 class Osoba {
-  constructor (
+  constructor(
     private ime: string,
-    private dob: number
+    private dob: number,
   ) {}
 
-  public setIme(ime: string): void{
+  public setIme(ime: string): void {
     this.ime = ime
   }
 
   public getIme(): string {
-     return this.ime
-   }
+    return this.ime
+  }
 
-
-  public setDob(dob: number): void{
+  public setDob(dob: number): void {
     this.dob = dob
   }
 
   public getDob(): number {
     return this.dob
   }
-  
 
   public get imeIDob() {
     return `${this.ime} ${this.dob}`

@@ -1,0 +1,9 @@
+SURADNIK
+-oib_suradnika
+-ime_i_prezime
+-plaća
+
+PROJEKT
+-broj_projekta
+-rok_zavrsetka_projekta
+

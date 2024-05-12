@@ -1,0 +1,11 @@
+suradnik
+-oib
+-ime_i_prezime
+-god_rođenja_suradnika
+
+
+potomak
+-oib
+-ime_djeteta
+-god_rođenja_djeteta
+-oib_roditelja

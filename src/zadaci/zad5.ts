@@ -21,14 +21,12 @@ class BankovniRacun {
   public dohvatiStanje() {
     return this.stanje
   }
-
 }
 
-const racun = new BankovniRacun (0)
+const racun = new BankovniRacun(0)
 
 console.log(racun.dohvatiStanje())
 console.log(racun.uplata(500))
 console.log(racun.dohvatiStanje())
 console.log(racun.isplata(200))
 console.log(racun.dohvatiStanje())
-

@@ -1,5 +1,5 @@
 class Auto {
-  constructor (
+  constructor(
     private model: string,
     private year: number,
     private manufacturer: string,
@@ -7,27 +7,27 @@ class Auto {
 }
 
 class AutoBuilder {
-    private model!: string
-    private year!: number
-    private manufacturer!: string
+  private model!: string
+  private year!: number
+  private manufacturer!: string
 
-    setModel(model: string): AutoBuilder {
-      this.model = model
-      return this
-    }
+  setModel(model: string): AutoBuilder {
+    this.model = model
+    return this
+  }
 
-    setYear(year: number): AutoBuilder {
-      this.year = year
-      return this
-    }
+  setYear(year: number): AutoBuilder {
+    this.year = year
+    return this
+  }
 
-    setManufacturer(manufacturer: string): AutoBuilder {
-      this.manufacturer = manufacturer
-      return this
-    }
-    build(): Auto {
-      return new Auto(this.model, this.year, this.manufacturer)
-    }
+  setManufacturer(manufacturer: string): AutoBuilder {
+    this.manufacturer = manufacturer
+    return this
+  }
+  build(): Auto {
+    return new Auto(this.model, this.year, this.manufacturer)
+  }
 }
 
 const auto = new AutoBuilder()
@@ -36,4 +36,4 @@ const auto = new AutoBuilder()
   .setYear(2012)
   .build()
 
-  console.log(auto)
+console.log(auto)

@@ -1,7 +1,7 @@
 class Automobile {
   static instanceNumber: number
 
-  constructor (
+  constructor(
     private marka: string,
     private godiste: number,
   ) {
@@ -15,9 +15,9 @@ class Automobile {
 }
 
 console.log(Automobile.GetCreatedInstances())
-console.log(new Automobile('BMW' , 2023))
+console.log(new Automobile('BMW', 2023))
 console.log(Automobile.GetCreatedInstances())
-console.log(new Automobile('VW' , 2023))
+console.log(new Automobile('VW', 2023))
 console.log(Automobile.GetCreatedInstances())
-console.log(new Automobile('Mercedes' , 2023))
+console.log(new Automobile('Mercedes', 2023))
 console.log(Automobile.GetCreatedInstances())
