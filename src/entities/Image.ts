@@ -21,7 +21,7 @@ export default class Image extends BaseEntity {
   @Column('character varying', { name: 'image_name', length: 255 })
   imageName!: string
 
-  @Column('character varying', { name: 'image_description', length: 2048 })
+  @Column('character varying', { name: 'image_description', length: 512 })
   imageDescription!: string
 
   @Column('boolean', { name: 'is_thumbnail', default: () => 'false' })

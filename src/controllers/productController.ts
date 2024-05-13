@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import productService from '../services/productService'
 import Product from '../entities/Product'
 import Image from '../entities/Image'
+import Category from '../entities/Category'
 
 const getAllProducts = async (req: Request, res: Response) => {
   res.send(await productService.getAllProducts())
@@ -53,6 +54,12 @@ const deleteImageById = async (req: Request, res: Response) => {
     await productService.deleteImageById(Number.parseInt(req.params.id, 10)),
   )
 }
+
+const getProductCategory = async (req: Request, res: Response) => {
+  const productId = Number.parseInt(req.params.id, 10)
+  res.send(await productService.getProductCategory(productId))
+}
+
 export {
   getAllProducts,
   getProductById,
@@ -63,4 +70,5 @@ export {
   addProductImages,
   updateImages,
   deleteImageById,
+  getProductCategory,
 }

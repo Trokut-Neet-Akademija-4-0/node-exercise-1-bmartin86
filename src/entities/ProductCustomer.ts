@@ -5,21 +5,17 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
+  PrimaryGeneratedColumn,
 } from 'typeorm'
 import Cart from './Cart'
 import Customer from './Customer'
 import ProductSizeQuantity from './ProductSizeQuantity'
 
-@Index('product_customer_pkey', ['customerId', 'productSizeQuantityId'], {
-  unique: true,
-})
+@Index('product_customer_pkey', ['productCustomerId'], { unique: true })
 @Entity('product_customer', { schema: 'public' })
 export default class ProductCustomer extends BaseEntity {
-  @Column('bigint', { primary: true, name: 'product_size_quantity_id' })
-  productSizeQuantityId!: string
-
-  @Column('bigint', { primary: true, name: 'customer_id' })
-  customerId!: number
+  @PrimaryGeneratedColumn({ type: 'integer', name: 'product_customer_id' })
+  productCustomerId!: number
 
   @Column('smallint', { name: 'quantity' })
   quantity!: number

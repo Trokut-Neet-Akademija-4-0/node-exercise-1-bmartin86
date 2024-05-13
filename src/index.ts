@@ -8,6 +8,7 @@ import cartRoutes from './routes/cartRoutes'
 import productRoutes from './routes/productRoutes'
 import errorHandler from './middlewares/errorHandler'
 import ProductImporter from './config/productImporter'
+import categoryRoutes from './routes/categoryRoutes'
 
 dataSource
   .initialize()
@@ -28,6 +29,7 @@ app.use('/', homeRoutes)
 //app.use('/users', userRoutes)
 app.use('/products', productRoutes)
 app.use('/cart', cartRoutes)
+app.use('/category', categoryRoutes)
 
 app.use(errorHandler)
 

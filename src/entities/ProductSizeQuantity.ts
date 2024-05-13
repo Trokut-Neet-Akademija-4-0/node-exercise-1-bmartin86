@@ -41,4 +41,15 @@ export default class ProductSizeQuantity extends BaseEntity {
     { name: 'product_size_id', referencedColumnName: 'productSizeId' },
   ])
   productSize!: ProductSize
+
+  @Column({ type: 'bigint', name: 'product_id' })
+  productId!: number
+
+  @Column({ type: 'smallint', name: 'product_size_id' })
+  productSizeId!: number
+
+  updateProductQuantityAndPrice(quantity: number, price: number) {
+    this.quantity = quantity
+    this.product.productPrice = price
+  }
 }

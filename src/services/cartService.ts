@@ -1,16 +1,29 @@
+/* eslint-disable class-methods-use-this */
 import CartProduct from '../models/cartProductModel'
-import ICart from '../models/interfaces/cartInterface'
-import userCart from '../models/cartModel'
 import productService from './productService'
 import HttpError from '../utils/HttpError'
+import Cart from '../entities/Cart'
+import ProductCustomer from '../entities/ProductCustomer'
+import Product from '../entities/Product'
+import Customer from '../entities/Customer'
+import Transaction from '../entities/Transaction'
 
 // Cart servis gdje nam se nalazi cila nasa poslovna logika vezana za kosaricu
 class CartService {
-  private cart: ICart = userCart
+  // async getCart(): Promise:<Cart> {
+  //   let nonProcessedCart = await Cart.findOne({
+  //     relations: ['customer', 'productCustomer'],
+  //     where: {
+  //       isProcessed: false,
+  //     },
+  //   })
 
-  getCart(): ICart {
-    return this.cart
-  }
+  //   if (!nonProcessedCart) {
+  //     nonProcessedCart = new Cart()
+  //     nonProcessedCart = await nonProcessedCart.save()
+  //   }
+  //   return nonProcessedCart
+  // }
 
   // dodavanje produkta u kosaricu pomocu produkt id-a, uvijek uveca produkt za 1
   addProductById(id: number): ICart {

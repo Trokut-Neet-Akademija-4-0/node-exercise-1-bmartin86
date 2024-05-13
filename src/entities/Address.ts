@@ -3,12 +3,9 @@ import {
   Column,
   Entity,
   Index,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm'
-import City from './City'
 import Customer from './Customer'
 
 @Index('address_pkey', ['addressId'], { unique: true })
@@ -30,9 +27,11 @@ export default class Address extends BaseEntity {
   })
   deliveryRemark!: string | null
 
-  @ManyToOne(() => City, (city) => city.addresses)
-  @JoinColumn([{ name: 'city_id', referencedColumnName: 'cityId' }])
-  city!: City
+  @Column('integer', { name: 'zip_code' })
+  zipCode!: number
+
+  @Column('character varying', { name: 'city_name', length: 512 })
+  cityName!: string
 
   @OneToMany(() => Customer, (customer) => customer.address)
   customers!: Customer[]

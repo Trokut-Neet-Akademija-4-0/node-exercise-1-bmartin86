@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   Index,
+  IsNull,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -24,10 +25,9 @@ export default class Product extends BaseEntity {
 
   @Column('character varying', {
     name: 'product_description',
-    nullable: true,
     length: 1024,
   })
-  productDescription!: string | null
+  productDescription!: string
 
   @Column('numeric', { name: 'product_price', precision: 10, scale: 2 })
   productPrice!: number
@@ -38,6 +38,7 @@ export default class Product extends BaseEntity {
   @Column('timestamp with time zone', {
     name: 'deleted_at',
     nullable: true,
+    default: () => IsNull,
   })
   deletedAt!: Date | null
 
