@@ -2,7 +2,6 @@ import { DataSource } from 'typeorm'
 import Address from './entities/Address'
 import Cart from './entities/Cart'
 import Category from './entities/Category'
-import City from './entities/City'
 import Customer from './entities/Customer'
 import Gender from './entities/Gender'
 import Image from './entities/Image'
@@ -24,7 +23,6 @@ export default new DataSource({
     Address,
     Cart,
     Category,
-    City,
     Customer,
     Gender,
     Image,

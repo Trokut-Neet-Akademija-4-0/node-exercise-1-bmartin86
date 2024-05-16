@@ -8,9 +8,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm'
-import Customer from './Customer'
-import Transaction from './Transaction'
-import ProductCustomer from './ProductCustomer'
+import Customer from '../entities/Customer'
+import Transaction from '../entities/Transaction'
+import ProductCustomer from '../entities/ProductCustomer'
 
 @Index('cart_id', ['cartId'], { unique: true })
 @Entity('cart', { schema: 'public' })
@@ -18,11 +18,15 @@ export default class Cart extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'cart_id' })
   cartId!: number
 
-  @Column('boolean', { name: 'is_processed', default: () => 'false' })
-  isProcessed!: boolean
+  @Column('boolean', {
+    name: 'is_processed',
+    nullable: true,
+    default: () => 'false',
+  })
+  isProcessed!: boolean | null
 
-  @Column('numeric', { name: 'total', precision: 10, scale: 2 })
-  total!: number
+  @Column('numeric', { name: 'total', nullable: true, precision: 10, scale: 2 })
+  total!: number | null
 
   @ManyToOne(() => Customer, (customer) => customer.carts)
   @JoinColumn([{ name: 'customer_id', referencedColumnName: 'customerId' }])
@@ -36,4 +40,12 @@ export default class Cart extends BaseEntity {
 
   @OneToMany(() => ProductCustomer, (productCustomer) => productCustomer.cart)
   productCustomers!: ProductCustomer[]
+
+  public get products() {
+    return this.productCustomers.map((pc) => {
+      const product = pc.productSizeQuantity
+      product.updateProductQuantityAndPrice(pc.quantity, pc.price)
+      return product
+    })
+  }
 }

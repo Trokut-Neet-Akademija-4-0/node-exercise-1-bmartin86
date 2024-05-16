@@ -1,15 +1,11 @@
 import Product from '../entities/Product'
 import Image from '../entities/Image'
-import IProduct from '../models/interfaces/productInterface'
-import products from '../models/productsModel'
 import HttpError from '../utils/HttpError'
 import Gender from '../entities/Gender'
 import Category from '../entities/Category'
 import { IsNull } from 'typeorm'
 
 class ProductService {
-  private products: IProduct[] = products
-
   async getAllProducts(): Promise<Product[]> {
     return Product.find({
       relations: {
@@ -19,6 +15,9 @@ class ProductService {
       },
       where: {
         deletedAt: IsNull(),
+        images: {
+          isThumbnail: true,
+        },
       },
     })
   }
@@ -29,13 +28,16 @@ class ProductService {
         images: true,
         gender: true,
         category: true,
+        productSizeQuantities: true,
       },
       where: {
         productId: id,
+        productSizeQuantities: {
+          productId: id,
+        },
       },
     })
-    if (!foundProduct)
-      throw new HttpError(404, `Product with id ${id} not found`)
+    if (!foundProduct) throw new Error('Id is required!')
     return foundProduct
   }
 

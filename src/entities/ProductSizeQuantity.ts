@@ -17,8 +17,8 @@ import ProductSize from './ProductSize'
 })
 @Entity('product_size_quantity', { schema: 'public' })
 export default class ProductSizeQuantity extends BaseEntity {
-  @Column('smallint', { name: 'quantity', nullable: true })
-  quantity!: number | null
+  @Column('smallint', { name: 'available_quantity', nullable: true })
+  availableQuantity!: number | null
 
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'product_size_quantity_id' })
   productSizeQuantityId!: number
@@ -49,7 +49,7 @@ export default class ProductSizeQuantity extends BaseEntity {
   productSizeId!: number
 
   updateProductQuantityAndPrice(quantity: number, price: number) {
-    this.quantity = quantity
+    this.availableQuantity = quantity
     this.product.productPrice = price
   }
 }

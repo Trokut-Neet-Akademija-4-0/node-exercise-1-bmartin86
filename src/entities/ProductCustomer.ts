@@ -10,6 +10,7 @@ import {
 import Cart from './Cart'
 import Customer from './Customer'
 import ProductSizeQuantity from './ProductSizeQuantity'
+import Product from './Product'
 
 @Index('product_customer_pkey', ['productCustomerId'], { unique: true })
 @Entity('product_customer', { schema: 'public' })
@@ -42,4 +43,21 @@ export default class ProductCustomer extends BaseEntity {
     },
   ])
   productSizeQuantity!: ProductSizeQuantity
+
+  @Column({ type: 'bigint', name: 'product_size_quantity_id' })
+  productSizeQuantityId!: number
+
+  public static CreateCartProduct(
+    cart: Cart,
+    cartProduct: ProductSizeQuantity,
+    quantity: number,
+  ) {
+    const pk = new ProductCustomer()
+    pk.price = cartProduct.product.productPrice
+    pk.quantity = quantity
+    pk.cart = cart
+    pk.productSizeQuantity = cartProduct
+    if (cart.customer) pk.customer = cart.customer
+    return pk
+  }
 }
