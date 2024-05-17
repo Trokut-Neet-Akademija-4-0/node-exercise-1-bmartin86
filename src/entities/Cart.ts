@@ -48,4 +48,13 @@ export default class Cart extends BaseEntity {
       return product
     })
   }
+
+  public async UpdateTotal(): Promise<void> {
+    this.total = 0
+    this.productCustomers.forEach((pc) => {
+      if (this.total != null) this.total += pc.price * pc.quantity
+      else this.total = pc.price * pc.quantity
+    })
+    this.save()
+  }
 }

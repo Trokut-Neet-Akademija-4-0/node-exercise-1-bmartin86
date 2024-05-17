@@ -15,7 +15,7 @@ export default class Transaction extends BaseEntity {
   transactionId!: number
 
   @Column('numeric', { name: 'total', precision: 10, scale: 2 })
-  total!: string
+  total!: number
 
   @OneToMany(() => Cart, (cart) => cart.transaction)
   carts!: Cart[]

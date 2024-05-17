@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import Customer from './Customer'
+import AddressInformation from '../models/addressInformation'
 
 @Index('address_pkey', ['addressId'], { unique: true })
 @Entity('address', { schema: 'public' })
@@ -35,4 +36,29 @@ export default class Address extends BaseEntity {
 
   @OneToMany(() => Customer, (customer) => customer.address)
   customers!: Customer[]
+
+  public static async GetExistingAddressFromAddressInformation(
+    address: AddressInformation,
+  ): Promise<Address | null> {
+    return Address.findOne({
+      where: {
+        streetName: address.streetName,
+        houseNumber: address.houseNumber,
+        zipCode: address.zipCode,
+        cityName: address.cityName,
+      },
+    })
+  }
+
+  public static async CreateAddressFromAddressInformation(
+    cartAddress: AddressInformation,
+  ): Promise<Address> {
+    const address = new Address()
+    address.streetName = cartAddress.streetName
+    address.houseNumber = cartAddress.houseNumber
+    address.zipCode = cartAddress.zipCode
+    address.cityName = cartAddress.cityName
+    address.deliveryRemark = cartAddress.deliveryRemark
+    return address.save()
+  }
 }
