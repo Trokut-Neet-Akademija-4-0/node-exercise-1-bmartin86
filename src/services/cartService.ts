@@ -205,6 +205,30 @@ class CartService {
         throw new Error('Invalid product details')
       }
 
+      // Fetch the ProductSizeQuantity entity
+      const productSizeQuantity = await ProductSizeQuantity.findOne({
+        where: { productSizeQuantityId },
+      })
+      console.log('psqID', productSizeQuantityId)
+      console.log('psq', productSizeQuantity)
+
+      if (!productSizeQuantity) {
+        throw new HttpError(
+          404,
+          `Product with ID ${productSizeQuantityId} not found`,
+        )
+      }
+
+      // Check if enough quantity is available
+      if (
+        !productSizeQuantity.availableQuantity ||
+        productSizeQuantity.availableQuantity < quantity
+      ) {
+        throw new Error(
+          `Insufficient quantity for product ID ${productSizeQuantityId}. Available: ${productSizeQuantity.availableQuantity}, Requested: ${quantity}`,
+        )
+      }
+
       // Create CartProductAddRequest
       const cartProductAddRequest: CartProductAddRequest = { quantity }
 
@@ -214,6 +238,9 @@ class CartService {
         productSizeQuantityId,
         cartProductAddRequest,
       )
+      // Deduct the purchased quantity from available quantity
+      productSizeQuantity.availableQuantity -= quantity
+      await productSizeQuantity.save()
     }
 
     // Reload the cart
