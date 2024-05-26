@@ -52,7 +52,6 @@ class CartService {
     if (!foundCart) {
       throw new HttpError(404, `Cart with id ${cartId} not found`)
     }
-    console.log('Get cart by id', foundCart)
     return foundCart
   }
 
@@ -71,16 +70,9 @@ class CartService {
       relations: ['product'],
     })
 
-    if (!product)
+    if (!product) {
       throw new HttpError(404, `Product with id ${cartProductId} not found`)
-
-    let existingQuantityOfProductInCart = 0
-
-    this.checkIsQuantityValid(
-      product,
-      cartProductAddRequest.quantity,
-      existingQuantityOfProductInCart,
-    )
+    }
 
     const existingCartProduct = cart.productCustomers.find(
       (pc) =>
@@ -97,6 +89,8 @@ class CartService {
       existingCartProduct.quantity += cartProductAddRequest.quantity
       await existingCartProduct.save()
     } else {
+      this.checkIsQuantityValid(product, cartProductAddRequest.quantity, 0)
+
       const newCartProduct = ProductCustomer.CreateCartProduct(
         cart,
         product,
@@ -105,6 +99,7 @@ class CartService {
       await newCartProduct.save()
     }
 
+    // Reload the cart to ensure all relations are loaded
     cart = await this.getCartById(cartId)
 
     await cart.UpdateTotal()
@@ -192,13 +187,12 @@ class CartService {
   async purchaseCartById(
     customerInformation: CartCustomerInformationRequest,
   ): Promise<Cart> {
-    //console.log(customerInformation)
     let cart = await this.getCart()
     cart.customer = await Customer.CreateCustomerFromCustomerInformation(
       customerInformation.customer,
     )
+    await cart.save()
     const products = customerInformation.products
-    //console.log(products)
 
     // Iterate over products and add them to the cart
     for (const product of products) {
@@ -213,17 +207,20 @@ class CartService {
 
       // Create CartProductAddRequest
       const cartProductAddRequest: CartProductAddRequest = { quantity }
-      console.log('quantity from request', cartProductAddRequest)
 
-      // Add product to the cart using the existing addProductById function
+      // Add each product to the cart
       await this.addProductById(
         cart.cartId,
         productSizeQuantityId,
         cartProductAddRequest,
       )
     }
-    cart.total = customerInformation.total
+
+    // Reload the cart
+    cart = await this.getCartById(cart.cartId)
+
     await cart.UpdateTotal()
+    await cart.save()
 
     if (!cart.transaction) {
       const transaction = new Transaction()
@@ -233,6 +230,7 @@ class CartService {
 
       transaction.total = cart.total
       await transaction.save()
+      await cart.save()
       cart.transaction = transaction
     }
 

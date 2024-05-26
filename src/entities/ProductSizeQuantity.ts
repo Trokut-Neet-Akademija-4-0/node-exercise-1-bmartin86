@@ -59,8 +59,34 @@ export default class ProductSizeQuantity extends BaseEntity {
   @Column({ type: 'smallint', name: 'product_size_id' })
   productSizeId!: number
 
-  updateProductQuantityAndPrice(quantity: number, price: number) {
-    this.availableQuantity = quantity
-    this.product.productPrice = price
+  // updateProductQuantityAndPrice(product: ProductSizeQuantity) {
+  //   this.availableQuantity = product.availableQuantity
+
+  //   if (
+  //     product.product.discountPercentage &&
+  //     product.product.discountPercentage > 0
+  //   ) {
+  //     // Apply discount if available
+  //     this.product.productPrice =
+  //       product.product.productPrice *
+  //       (1 - product.product.discountPercentage / 100)
+  //   } else {
+  //     // No discount, simply update the price
+  //     this.product.productPrice = product.product.productPrice
+  //   }
+  // }
+
+  public updateProductQuantityAndPrice(): void {
+    if (
+      this.product.discountPercentage &&
+      this.product.discountPercentage > 0
+    ) {
+      // Apply discount if available
+      this.product.productPrice =
+        this.product.productPrice * (1 - this.product.discountPercentage / 100)
+    } else {
+      // No discount, simply update the price
+      this.product.productPrice = this.product.productPrice
+    }
   }
 }

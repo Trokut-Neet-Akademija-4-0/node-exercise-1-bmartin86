@@ -58,7 +58,7 @@ export default class Cart extends BaseEntity {
   public get products() {
     return this.productCustomers.map((pc) => {
       const product = pc.productSizeQuantity
-      product.updateProductQuantityAndPrice(pc.quantity, pc.price)
+      product.updateProductQuantityAndPrice()
       return product
     })
   }
@@ -66,14 +66,38 @@ export default class Cart extends BaseEntity {
   public async UpdateTotal(): Promise<void> {
     if (!this.productCustomers) {
       console.error('productCustomers is undefined')
-      return
+      this.productCustomers = await ProductCustomer.find({
+        where: { cart: this },
+      })
     }
 
+    // if (
+    //   cartProduct.product.discountPercentage &&
+    //   cartProduct.product.discountPercentage > 0
+    // ) {
+    //   pk.price =
+    //     cartProduct.product.productPrice *
+    //     (1 - cartProduct.product.discountPercentage / 100)
+    // } else {
+    //   pk.price = cartProduct.product.productPrice
+    // }
+
     this.total = 0
-    this.productCustomers.forEach((pc) => {
-      if (this.total != null) this.total += pc.price * pc.quantity
-      else this.total = pc.price * pc.quantity
-    })
+    for (const pc of this.productCustomers) {
+      const product = pc.productSizeQuantity
+      let price
+      if (
+        product.product.discountPercentage &&
+        product.product.discountPercentage > 0
+      ) {
+        price =
+          product.product.productPrice *
+          (1 - product.product.discountPercentage / 100)
+      } else {
+        price = product.product.productPrice // Retrieve the correct price from the product
+      }
+      this.total += price * pc.quantity
+    }
 
     // Log the updated total
     console.log('Updated total:', this.total)
