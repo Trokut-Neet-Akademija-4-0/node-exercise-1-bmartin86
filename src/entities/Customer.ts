@@ -2,21 +2,27 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Generated,
   Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm'
 import Cart from './Cart'
 import Address from './Address'
-import ProductCustomer from './ProductCustomer'
 import CustomerInformation from '../models/customerInformation'
+import StringToNumberTransformer from '../utils/stringToNumberTransformer'
 
 @Index('customer_pkey', ['customerId'], { unique: true })
 @Entity('customer', { schema: 'public' })
 export default class Customer extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', name: 'customer_id' })
+  @Generated()
+  @PrimaryColumn({
+    type: 'bigint',
+    name: 'customer_id',
+    transformer: new StringToNumberTransformer(),
+  })
   customerId!: number
 
   @Column('character varying', { name: 'email', length: 256 })
@@ -45,12 +51,6 @@ export default class Customer extends BaseEntity {
   @ManyToOne(() => Address, (address) => address.customers)
   @JoinColumn([{ name: 'address_id', referencedColumnName: 'addressId' }])
   address!: Address
-
-  @OneToMany(
-    () => ProductCustomer,
-    (productCustomer) => productCustomer.customer,
-  )
-  productCustomers!: ProductCustomer[]
 
   public static async GetExistingCustomerFromCustomerInformation(
     cartCustomer: CustomerInformation,

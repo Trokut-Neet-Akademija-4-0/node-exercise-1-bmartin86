@@ -5,7 +5,7 @@ export default class AddressInformation {
 
   public deliveryRemark!: string
 
-  public zipCode!: number
+  public zipCode!: string
 
   public cityName!: string
 }

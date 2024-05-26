@@ -2,17 +2,24 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Generated,
   Index,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm'
 import Product from './Product'
+import StringToNumberTransformer from '../utils/stringToNumberTransformer'
 
 @Index('image_id', ['imageId'], { unique: true })
 @Entity('image', { schema: 'public' })
 export default class Image extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', name: 'image_id' })
+  @Generated()
+  @PrimaryColumn({
+    type: 'bigint',
+    name: 'image_id',
+    transformer: new StringToNumberTransformer(),
+  })
   imageId!: number
 
   @Column('character varying', { name: 'image_url', length: 1024 })

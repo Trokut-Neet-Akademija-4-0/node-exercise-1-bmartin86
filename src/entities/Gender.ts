@@ -2,16 +2,23 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Generated,
   Index,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm'
 import Product from './Product'
+import StringToNumberTransformer from '../utils/stringToNumberTransformer'
 
 @Index('gender_pkey', ['genderId'], { unique: true })
 @Entity('gender', { schema: 'public' })
 export default class Gender extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'integer', name: 'gender_id' })
+  @Generated()
+  @PrimaryColumn({
+    type: 'integer',
+    name: 'gender_id',
+    transformer: new StringToNumberTransformer(),
+  })
   genderId!: number
 
   @Column('character varying', { name: 'gender_name', length: 56 })

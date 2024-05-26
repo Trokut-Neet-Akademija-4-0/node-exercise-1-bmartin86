@@ -2,17 +2,24 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Generated,
   Index,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm'
 import Customer from './Customer'
 import AddressInformation from '../models/addressInformation'
+import StringToNumberTransformer from '../utils/stringToNumberTransformer'
 
 @Index('address_pkey', ['addressId'], { unique: true })
 @Entity('address', { schema: 'public' })
 export default class Address extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', name: 'address_id' })
+  @Generated()
+  @PrimaryColumn({
+    type: 'bigint',
+    name: 'address_id',
+    transformer: new StringToNumberTransformer(),
+  })
   addressId!: number
 
   @Column('character varying', { name: 'street_name', length: 128 })
@@ -29,7 +36,7 @@ export default class Address extends BaseEntity {
   deliveryRemark!: string | null
 
   @Column('integer', { name: 'zip_code' })
-  zipCode!: number
+  zipCode!: string
 
   @Column('character varying', { name: 'city_name', length: 512 })
   cityName!: string

@@ -8,9 +8,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import Cart from './Cart'
-import Customer from './Customer'
 import ProductSizeQuantity from './ProductSizeQuantity'
-import Product from './Product'
+import StringToFloatTransformer from '../utils/stringToFloatTransformer'
 
 @Index('product_customer_pkey', ['productCustomerId'], { unique: true })
 @Entity('product_customer', { schema: 'public' })
@@ -21,16 +20,17 @@ export default class ProductCustomer extends BaseEntity {
   @Column('smallint', { name: 'quantity' })
   quantity!: number
 
-  @Column('numeric', { name: 'price', precision: 10, scale: 2 })
+  @Column('numeric', {
+    name: 'price',
+    precision: 10,
+    scale: 2,
+    transformer: new StringToFloatTransformer(),
+  })
   price!: number
 
   @ManyToOne(() => Cart, (cart) => cart.productCustomers)
   @JoinColumn([{ name: 'cart_id', referencedColumnName: 'cartId' }])
   cart!: Cart
-
-  @ManyToOne(() => Customer, (customer) => customer.productCustomers)
-  @JoinColumn([{ name: 'customer_id', referencedColumnName: 'customerId' }])
-  customer!: Customer
 
   @ManyToOne(
     () => ProductSizeQuantity,
@@ -57,7 +57,6 @@ export default class ProductCustomer extends BaseEntity {
     pk.quantity = quantity
     pk.cart = cart
     pk.productSizeQuantity = cartProduct
-    if (cart.customer) pk.customer = cart.customer
     return pk
   }
 }

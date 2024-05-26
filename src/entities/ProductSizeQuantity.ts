@@ -2,15 +2,17 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Generated,
   Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm'
 import ProductCustomer from './ProductCustomer'
 import Product from './Product'
 import ProductSize from './ProductSize'
+import StringToNumberTransformer from '../utils/stringToNumberTransformer'
 
 @Index('product_size_quantity_pkey', ['productSizeQuantityId'], {
   unique: true,
@@ -20,7 +22,12 @@ export default class ProductSizeQuantity extends BaseEntity {
   @Column('smallint', { name: 'available_quantity', nullable: true })
   availableQuantity!: number | null
 
-  @PrimaryGeneratedColumn({ type: 'bigint', name: 'product_size_quantity_id' })
+  @Generated()
+  @PrimaryColumn({
+    type: 'bigint',
+    name: 'product_size_quantity_id',
+    transformer: new StringToNumberTransformer(),
+  })
   productSizeQuantityId!: number
 
   @OneToMany(
@@ -42,7 +49,11 @@ export default class ProductSizeQuantity extends BaseEntity {
   ])
   productSize!: ProductSize
 
-  @Column({ type: 'bigint', name: 'product_id' })
+  @Column({
+    type: 'bigint',
+    name: 'product_id',
+    transformer: new StringToNumberTransformer(),
+  })
   productId!: number
 
   @Column({ type: 'smallint', name: 'product_size_id' })

@@ -24,17 +24,15 @@ class ProductService {
 
   async getProductById(id: number): Promise<Product> {
     const foundProduct = await Product.findOne({
-      relations: {
-        images: true,
-        gender: true,
-        category: true,
-        productSizeQuantities: true,
-      },
+      relations: [
+        'images',
+        'gender',
+        'category',
+        'productSizeQuantities',
+        'productSizeQuantities.productSize',
+      ],
       where: {
         productId: id,
-        productSizeQuantities: {
-          productId: id,
-        },
       },
     })
     if (!foundProduct) throw new Error('Id is required!')

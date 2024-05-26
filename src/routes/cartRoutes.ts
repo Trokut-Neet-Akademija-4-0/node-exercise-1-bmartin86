@@ -15,7 +15,7 @@ const router = express.Router()
 router.get('/', getCart)
 router.get('/:id', getCartById)
 // kupnja kosarice po id-u
-router.post('/:id/purchase', purchaseCartById)
+router.post('/purchase', purchaseCartById)
 // dodavanje proizvoda na kosaricu pomocu product id-a
 router.post('/:cartId/products/:productId/add', addProductToCart)
 // update kolicine proizvoda u kosarici

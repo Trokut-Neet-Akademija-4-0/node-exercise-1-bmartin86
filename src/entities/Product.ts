@@ -2,22 +2,30 @@ import {
   BaseEntity,
   Column,
   Entity,
+  Generated,
   Index,
   IsNull,
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm'
 import Image from './Image'
 import Category from './Category'
 import Gender from './Gender'
 import ProductSizeQuantity from './ProductSizeQuantity'
+import StringToNumberTransformer from '../utils/stringToNumberTransformer'
+import StringToFloatTransformer from '../utils/stringToFloatTransformer'
 
 @Index('product_pkey', ['productId'], { unique: true })
 @Entity('product', { schema: 'public' })
 export default class Product extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'bigint', name: 'product_id' })
+  @Generated()
+  @PrimaryColumn({
+    type: 'bigint',
+    name: 'product_id',
+    transformer: new StringToNumberTransformer(),
+  })
   productId!: number
 
   @Column('character varying', { name: 'product_name', length: 512 })
@@ -29,7 +37,12 @@ export default class Product extends BaseEntity {
   })
   productDescription!: string
 
-  @Column('numeric', { name: 'product_price', precision: 10, scale: 2 })
+  @Column('numeric', {
+    name: 'product_price',
+    precision: 10,
+    scale: 2,
+    transformer: new StringToFloatTransformer(),
+  })
   productPrice!: number
 
   @Column('smallint', { name: 'discount_percentage' })
@@ -62,7 +75,11 @@ export default class Product extends BaseEntity {
   @Column({ type: 'integer', name: 'gender_id' })
   genderId!: number
 
-  @Column({ type: 'bigint', name: 'category_id' })
+  @Column({
+    type: 'bigint',
+    name: 'category_id',
+    transformer: new StringToNumberTransformer(),
+  })
   categoryId!: number
 
   updateExistingProduct(updatedData: Product) {
