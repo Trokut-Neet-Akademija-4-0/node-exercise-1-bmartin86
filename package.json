@@ -8,13 +8,27 @@
     "lint": "eslint . --ext .ts",
     "build": "tsc",
     "dev": "node --env-file=.env --import=tsx --watch ./src/index.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migrate": "npm run typeorm migration:run -- -d ./src/app-data-source.ts",
+    "generate-entities-from-db": "typeorm-model-generator -h localhost -d postgres -u postgres -x root -e postgres -o . -s public",
+    "zad1": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad1.ts",
+    "zad2": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad2.ts",
+    "zad4": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad4.ts",
+    "zad5": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad5.ts",
+    "zad6": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad6.ts",
+    "zad7": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad7.ts",
+    "zad8": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad8.ts",
+    "zad9": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad9.ts",
+    "zad10": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad10.ts",
+    "zad11": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad11.ts",
+    "zad12": "node --env-file=.env --import=tsx --watch ./src/zadaci/zad12.ts"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.21",
-    "@types/node": "^20.12.3",
+    "@types/node": "^20.12.7",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
     "eslint": "^8.57.0",
@@ -24,11 +38,20 @@
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
     "prettier-eslint": "^16.3.0",
+    "ts-node": "^10.9.2",
     "tsx": "^4.7.1",
+    "typeorm-model-generator": "^0.4.6",
     "typescript": "^5.4.3"
   },
   "dependencies": {
+    "@types/cors": "^2.8.17",
+    "cors": "^2.8.5",
+    "csv": "^6.3.8",
     "dotenv": "^16.4.5",
-    "express": "^4.19.1"
+    "express": "^4.19.1",
+    "express-async-errors": "^3.1.1",
+    "pg": "^8.11.5",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
   }
 }

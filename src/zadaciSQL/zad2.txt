@@ -1,0 +1,13 @@
+CJENIK
+br_dijela
+br_dobavljaca
+cijena
+
+DOBAVLJAC
+br_dobavljaca
+naziv_dobavljaca
+adresa_dobavljaca
+
+DIO
+br_dijela
+naziv_dijela
