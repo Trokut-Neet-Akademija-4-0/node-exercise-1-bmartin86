@@ -18,6 +18,7 @@ class CartService {
         'customer.address',
         'productCustomers',
         'productCustomers.productSizeQuantity',
+        'productCustomers.productSizeQuantity.productSize',
         'productCustomers.productSizeQuantity.product',
         'productCustomers.productSizeQuantity.product.images',
         'transaction',
@@ -43,6 +44,7 @@ class CartService {
         'customer.address',
         'productCustomers',
         'productCustomers.productSizeQuantity',
+        'productCustomers.productSizeQuantity.productSize',
         'productCustomers.productSizeQuantity.product',
         'productCustomers.productSizeQuantity.product.images',
         'transaction',
@@ -64,10 +66,10 @@ class CartService {
     let cart = await this.getCartById(cartId)
 
     const product = await ProductSizeQuantity.findOne({
+      relations: ['product'],
       where: {
         productSizeQuantityId: cartProductId,
       },
-      relations: ['product'],
     })
 
     if (!product) {
